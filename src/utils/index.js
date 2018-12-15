@@ -18,7 +18,48 @@ export function formatTime (date) {
   return `${t1} ${t2}`
 }
 
+const protocol = 'http'
+const callTarget = '192.168.1.106:9090'
+
+function callApi (method='GET',url,data) {
+  wx.showLoading({
+    title: '加载中',//数据请求前loading，提高用户体验
+  })
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url: protocol + '://' + callTarget + '/' + url,
+      data: data,
+      method: method, // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+      header: {
+        // 'X-Bmob-Application-Id': bmobConfig.applicationId,
+        // 'X-Bmob-REST-API-Key': bmobConfig.restApiKey,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }, // 设置请求的 header
+      success: function (res) {
+        wx.hideLoading();
+        if(res.statusCode!=200){
+          wx.showToast({
+            title: "网络出错，稍后再试",
+            icon: "none"
+          });
+          return false;
+        }
+        resolve(res.data);
+      },
+      fail: function (error) {
+        wx.hideLoading();
+        reject(error);
+      },
+      complete: function () {
+        wx.hideLoading();
+      }
+    })
+  })
+}
+
+
 export default {
   formatNumber,
-  formatTime
+  formatTime,
+  callApi
 }

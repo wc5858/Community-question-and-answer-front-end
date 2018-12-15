@@ -1,8 +1,9 @@
 {
   "pages": [
     "pages/index/main",
-    "pages/logs/main",
-    "pages/counter/main"
+    "pages/mine/main",
+    "pages/act/main",
+    "pages/fou/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -20,12 +21,12 @@
       "selectedIconPath": "/static/imgs/barrage_fill.png",
       "text": "首页"
     },{
-      "pagePath": "pages/counter/main",
+      "pagePath": "pages/act/main",
       "iconPath": "/static/imgs/interactive.png",
       "selectedIconPath": "/static/imgs/interactive_fill.png",
-      "text": "通知"
+      "text": "动态"
     }, {
-      "pagePath": "pages/logs/main",
+      "pagePath": "pages/mine/main",
       "iconPath": "/static/imgs/mine.png",
       "selectedIconPath": "/static/imgs/mine_fill.png",
       "text": "我的"

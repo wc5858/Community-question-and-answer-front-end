@@ -1,12 +1,17 @@
 <template>
   <div class="container" @click="clickHandle('test click', $event)">
     <i-card full title="卡片标题" extra="额外内容" thumb="https://i.loli.net/2017/08/21/599a521472424.jpg">
-      <view slot="content">内容不错</view>
+      <view slot="content">内容不错xxx</view>
       <view slot="footer">尾部内容</view>
     </i-card>
-    
+
     <div class="userinfo" @click="bindViewTap">
-      <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
+      <img
+        class="userinfo-avatar"
+        v-if="userInfo.avatarUrl"
+        :src="userInfo.avatarUrl"
+        background-size="cover"
+      >
       <div class="userinfo-nickname">
         <card :text="userInfo.nickName"></card>
       </div>
@@ -19,8 +24,8 @@
     </div>
 
     <form class="form-container">
-      <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
+      <input type="text" class="form-control" v-model="motto" placeholder="v-model">
+      <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy">
     </form>
     <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
   </div>
@@ -46,13 +51,31 @@ export default {
       const url = "../logs/main";
       wx.navigateTo({ url });
     },
-    getUserInfo() {
-      // 调用登录接口
-      wx.login({
-        success: () => {
-          wx.getUserInfo({
+    login() {
+      wx.getStorage({
+        key: "openid",
+        success:res=> {
+          console.log(res.data);
+        },
+        fail:()=> {
+          // 调用登录接口
+          wx.login({
             success: res => {
-              this.userInfo = res.userInfo;
+              if (res.code) {
+                console.log(res.code);
+                this
+                  .$callApi("POST", "user/login", {
+                    code: res.code
+                  })
+                  .then(res => {
+                    console.log(res);
+                  })
+                  .catch(res => {
+                    console.log(res);
+                  });
+              } else {
+                console.log("登录失败！" + res.errMsg);
+              }
             }
           });
         }
@@ -64,9 +87,8 @@ export default {
   },
 
   created() {
-    // 调用应用实例的方法获取全局数据
-    this.getUserInfo();
-  }
+    this.login();
+  },
 };
 </script>
 
