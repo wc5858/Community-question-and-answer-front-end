@@ -7,8 +7,9 @@
           full="true"
           v-bind:title="item.name"
           v-bind:thumb="item.avatar"
+          extra="点击取消关注"
         >
-          <view slot="content">最近回答了：{{item.question}}</view>
+          <view slot="content">{{item.ups + '赞回答：' +item.question}}</view>
           <view slot="footer">{{item.answer}}</view>
         </i-card>
       </li>
@@ -24,17 +25,20 @@ export default {
         name: "混子队长",
         avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
         question: "计网作业不想做了怎么办",
-        answer: "让组员去做"
+        answer: "让组员去做",
+        ups: 100
       },{
         name: "混子队友",
         avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
         question: "计网作业不想做了怎么办",
-        answer: "让组长去做"
+        answer: "让组长去做",
+        ups: 100
       },{
         name: "混子队长",
         avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
         question: "计网作业组员和组长都不想做了怎么办",
-        answer: "让田神去做"
+        answer: "让田神去做",
+        ups: 100
       }]
     };
   },

@@ -3,7 +3,11 @@
     "pages/index/main",
     "pages/mine/main",
     "pages/act/main",
-    "pages/fou/main"
+    "pages/fou/main",
+    "pages/foq/main",
+    "pages/myq/main",
+    "pages/mya/main",
+    "pages/newq/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -1,43 +1,56 @@
 <template>
-  <div class="counter-warp">
-    <i-card full="true" title="卡片标题" extra="额外内容" thumb="https://i.loli.net/2017/08/21/599a521472424.jpg">
-      <view slot="content">内容不错</view>
-      <view slot="footer">尾部内容</view>
-    </i-card>
+  <div class="page">
+    <ul>
+      <li class="list" v-for="(item, itemIndex) in cards" v-bind:key="itemIndex">
+        {{item.value}}
+        <i-card
+          full="true"
+          v-bind:title="item.name"
+          v-bind:thumb="item.avatar"
+          extra="回复了你"
+        >
+          <view slot="content">{{item.res}}</view>
+          <!-- <view slot="footer">{{item.answer}}</view> -->
+        </i-card>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
-// Use Vuex
-import store from './store'
-
 export default {
-  computed: {
-    count () {
-      return store.state.count
-    }
+  data() {
+    return {
+      cards: [{
+        name: "混子队长",
+        avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
+        res: "神回复",
+      },{
+        name: "混子队友",
+        avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
+        res: "神回复",
+      },{
+        name: "混子队长",
+        avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
+        res: "神回复",
+      }]
+    };
   },
+  created() {},
   methods: {
-    increment () {
-      store.commit('increment')
-    },
-    decrement () {
-      store.commit('decrement')
-    }
   }
-}
+};
 </script>
 
 <style>
-.counter-warp {
-  text-align: center;
-  margin-top: 100px;
+.page {
+  background: #f3f3f3;
+  min-height: 100vh;
 }
-.home {
-  display: inline-block;
-  margin: 100px auto;
-  padding: 5px 10px;
-  color: blue;
-  border: 1px solid blue;
+ul {
+  overflow: hidden;
+}
+.list {
+  margin: 20rpx 0;
 }
 </style>
