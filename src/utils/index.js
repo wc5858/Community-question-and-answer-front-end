@@ -18,8 +18,8 @@ export function formatTime (date) {
   return `${t1} ${t2}`
 }
 
-const protocol = 'https'
-const callTarget = 'wc47501.3msl.cn/qna'
+const callTarget = 'https://wc47501.3msl.cn/qna'
+// const callTarget = 'http://192.168.1.106:443'
 
 function callApi (method='GET',url,data) {
   wx.showLoading({
@@ -27,7 +27,7 @@ function callApi (method='GET',url,data) {
   })
   return new Promise((resolve, reject) => {
     wx.request({
-      url: protocol + '://' + callTarget + '/' + url,
+      url: callTarget + '/' + url,
       data: data,
       method: method, // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
       header: {

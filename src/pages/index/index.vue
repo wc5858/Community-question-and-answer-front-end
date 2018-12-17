@@ -1,14 +1,42 @@
 <template>
   <div class="page">
-    <ul>
-      <li class="list" v-for="(item, itemIndex) in cards" v-bind:key="itemIndex" @click="goAnswer(itemIndex)">
-        {{item.value}}
+    <i-tabs v-bind:current="current" color="#73116f" @change="handleChange">
+      <i-tab key="tab1" title="关注"></i-tab>
+      <i-tab key="tab2" title="新回答"></i-tab>
+      <i-tab key="tab3" title="新问题"></i-tab>
+    </i-tabs>
+    <ul v-if="current=='tab1'">
+      <li class="list" v-for="(item, itemIndex) in cards" v-bind:key="itemIndex" @click="goAnswer(item.aid)">
         <i-card
           full="true"
           v-bind:title="item.user.name"
           v-bind:thumb="item.user.pictureurl"
         >
           <view slot="content">{{'回答了：' +item.question.title}}</view>
+          <view slot="footer">{{item.content}}</view>
+        </i-card>
+      </li>
+    </ul>
+    <ul v-if="current=='tab2'">
+      <li class="list" v-for="(item, itemIndex) in cards2" v-bind:key="itemIndex" @click="goAnswer(item.aid)">
+        <i-card
+          full="true"
+          v-bind:title="item.user.name"
+          v-bind:thumb="item.user.pictureurl"
+        >
+          <view slot="content">{{'回答了：' +item.question.title}}</view>
+          <view slot="footer">{{item.content}}</view>
+        </i-card>
+      </li>
+    </ul>
+    <ul v-if="current=='tab3'">
+      <li class="list" v-for="(item, itemIndex) in cards3" v-bind:key="itemIndex" @click="goQuestion(item.qid)">
+        <i-card
+          full="true"
+          v-bind:title="item.user.name"
+          v-bind:thumb="item.user.pictureurl"
+        >
+          <view slot="content">{{'提问了：' +item.title}}</view>
           <view slot="footer">{{item.content}}</view>
         </i-card>
       </li>
@@ -23,14 +51,36 @@
 export default {
   data() {
     return {
-      cards: []
+      cards: [],
+      cards2: [],
+      cards3: [],
+      current: 'tab1'
     };
   },
 
   methods: {
+    handleChange(e) {
+      this.current = e.target.key
+    },
+    load(uid) {
+      this.$callApi("GET",'answer/' + uid +'/getFollowUserAnswer').then(res=>{
+        this.cards=res
+      })
+      this.$callApi("GET",'/answer/0/getRecentAnswer').then(res=>{
+        this.cards2=res
+      })
+      this.$callApi("GET",'/question/0/getRecentQuestion').then(res=>{
+        this.cards3=res
+      })
+    },
     goAnswer(i){
       wx.navigateTo({
-        url: '/pages/ans/main?aid=' + this.cards[i].aid
+        url: '/pages/ans/main?aid=' + i
+      })
+    },
+    goQuestion(i){
+      wx.navigateTo({
+        url: '/pages/que/main?qid=' + i
       })
     },
     newQuestion() {
@@ -43,9 +93,7 @@ export default {
         key: "info",
         success:res=> {
           console.log(res.data)
-          this.$callApi("GET",'answer/' + res.data.uid +'/getFollowUserAnswer').then(res=>{
-            this.cards=res
-          })
+          this.load(res.data.uid)
         },
         fail:()=> {
           // 调用登录接口
@@ -57,9 +105,7 @@ export default {
                     code: res.code
                   })
                   .then(res => {
-                    this.$callApi("GET",'answer/' + res.uid +'/getFollowUserAnswer').then(res=>{
-                        this.cards=res
-                      })
+                    this.load(res.uid)
                     wx.setStorage({
                       key: 'info',
                       data: {
@@ -83,9 +129,7 @@ export default {
   onLoad() {
     let uid = wx.getStorageSync('info').uid
     if(uid) {
-      this.$callApi("GET",'answer/' + uid +'/getFollowUserAnswer').then(res=>{
-        this.cards=res
-      })
+      this.load(uid)
     }
   },
   created() {

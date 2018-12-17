@@ -1,6 +1,8 @@
 {
     "navigationBarTitleText": "社区问答",
     "usingComponents": {
+        "i-tabs": "/static/iview/tabs/index",
+        "i-tab": "/static/iview/tab/index",
         "i-card": "/static/iview/card/index",
         "i-icon": "/static/iview/icon/index"
     }
