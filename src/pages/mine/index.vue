@@ -2,7 +2,7 @@
   <div class="page">
     <div>
       <view class="avatar-bg-box">
-        <image class="avatar-bg" mode="aspectFill" src="/static/imgs/bg.jpg" />
+        <image class="avatar-bg" mode="scaleToFill" src="/static/imgs/bg.jpg" />
         <view class="user-name">{{name}}</view>
       </view>
       <image class="avatar" mode="aspectFill" v-bind:src="avatar" />
@@ -43,17 +43,15 @@ export default {
           this.name = res.userInfo.nickName;
           this.avatar = res.userInfo.avatarUrl;
           this.updateUserinfo()
+          this.show = false
         },
         fail: () => {
           this.show = true;
         }
       });
     },
-    onGotUserInfo(e) {
-      this.name = e.target.userInfo.nickName;
-      this.avatar = e.target.userInfo.avatarUrl;
-      this.show = false;
-      this.updateUserinfo()
+    onGotUserInfo() {
+      this.getUserInfo()
     },
     updateUserinfo(){
       let info = wx.getStorageSync('info')
@@ -82,6 +80,7 @@ export default {
   height: 450rpx;
 }
 .avatar-bg {
+  width: 100%;
   height: 100%;
 }
 .avatar {

@@ -43,6 +43,9 @@ export default {
         key: "info",
         success:res=> {
           console.log(res.data)
+          this.$callApi("GET",'answer/' + res.data.uid +'/getFollowUserAnswer').then(res=>{
+            this.cards=res
+          })
         },
         fail:()=> {
           // 调用登录接口
@@ -54,6 +57,9 @@ export default {
                     code: res.code
                   })
                   .then(res => {
+                    this.$callApi("GET",'answer/' + res.uid +'/getFollowUserAnswer').then(res=>{
+                        this.cards=res
+                      })
                     wx.setStorage({
                       key: 'info',
                       data: {
@@ -74,14 +80,16 @@ export default {
       });
     }
   },
-  created() {
-    this.login();
-  },
-  onShow() {
+  onLoad() {
     let uid = wx.getStorageSync('info').uid
-    this.$callApi("GET",'answer/' + uid +'/getFollowUserAnswer').then(res=>{
+    if(uid) {
+      this.$callApi("GET",'answer/' + uid +'/getFollowUserAnswer').then(res=>{
         this.cards=res
       })
+    }
+  },
+  created() {
+    this.login();
   }
 };
 </script>

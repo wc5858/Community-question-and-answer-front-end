@@ -18,8 +18,8 @@ export function formatTime (date) {
   return `${t1} ${t2}`
 }
 
-const protocol = 'http'
-const callTarget = '101.132.104.236:9090'
+const protocol = 'https'
+const callTarget = 'wc47501.3msl.cn/qna'
 
 function callApi (method='GET',url,data) {
   wx.showLoading({
