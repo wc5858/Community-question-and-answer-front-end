@@ -4,12 +4,12 @@
       <i-cell
         v-for="(item, itemIndex) in cards"
         v-bind:key="itemIndex"
-        v-bind:title="item.name"
-        v-bind:label="item.answers+'个回答 · '+item.focus+'人关注'"
-        url="/pages/dashboard/index"
+        v-bind:title="item.title"
+        v-bind:url="'/pages/que/main?qid=' + item.qid"
+        @click="goQuestion(item.qid)"
       >
       <div slot="footer">
-        <i-switch v-bind:value="item.on" size="large" @change="onChange(itemIndex)">
+        <i-switch v-bind:value="!item.state" size="large" @change.stop="onChange(itemIndex)">
             <view slot="open">开启</view>
             <view slot="close">关闭</view>
         </i-switch>
@@ -23,35 +23,36 @@
 export default {
   data() {
     return {
-      cards: [
-        {
-          name: "计网作业不想做了怎么办？",
-          focus: 100,
-          answers: 10,
-          qid: 0,
-          on:true
-        },
-        {
-          name: "计网作业不想做了怎么办？",
-          focus: 100,
-          answers: 10,
-          qid: 0,
-          on:true
-        },
-        {
-          name: "计网作业不想做了怎么办？",
-          focus: 100,
-          answers: 10,
-          qid: 0,
-          on:true
-        }
-      ]
+      cards: []
     };
   },
-  created() {},
+  onShow() {
+    let info = wx.getStorageSync('info')
+    this
+      .$callApi("GET",'question/' + info.uid +'/getByUserId')
+      .then(res => {
+        this.cards = res;
+      })
+      .catch(res => {
+        console.log(res);
+      });
+  },
   methods: {
+    goQuestion(qid) {
+      wx.navigateTo({
+        url: '/pages/que/main?qid=' + qid
+      })
+    },
     onChange(idx){
-      this.cards[idx].on = !this.cards[idx].on
+      this.cards[idx].state = !this.cards[idx].state
+      this
+      .$callApi("GET",'question/' + this.cards[idx].qid +(this.cards[idx].state ?'/closeQuestion':'/openQuestion'))
+      .then(res => {
+        console.log('操作成功')
+      })
+      .catch(res => {
+        console.log(res);
+      });
     }
   }
 };

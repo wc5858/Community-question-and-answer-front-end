@@ -2,7 +2,7 @@
     <view wx:if="{{ title }}" class="i-cell-hd i-input-title">{{ title }}</view>
     <textarea
         wx:if="{{ type === 'textarea' }}"
-        auto-height
+        auto-height="{{autoheight}}"
         disabled="{{ disabled }}"
         focus="{{ autofocus }}"
         value="{{ value }}"

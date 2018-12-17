@@ -4,10 +4,9 @@
       <i-cell
         v-for="(item, itemIndex) in cards"
         v-bind:key="itemIndex"
-        v-bind:title="item.name"
-        v-bind:label="item.answers+'个回答 · '+item.focus+'人关注'"
+        v-bind:title="item.title"
         is-link
-        url="/pages/dashboard/index"
+        v-bind:url="'/pages/que/main?qid=' + item.qid"
       ></i-cell>
     </i-cell-group>
   </div>
@@ -17,29 +16,17 @@
 export default {
   data() {
     return {
-      cards: [
-        {
-          name: "计网作业不想做了怎么办？",
-          focus: 100,
-          answers: 10,
-          qid: 0
-        },
-        {
-          name: "计网作业不想做了怎么办？",
-          focus: 100,
-          answers: 10,
-          qid: 0
-        },
-        {
-          name: "计网作业不想做了怎么办？",
-          focus: 100,
-          answers: 10,
-          qid: 0
-        }
-      ]
+      cards: []
     };
   },
-  created() {},
+  onShow() {
+    let info = wx.getStorageSync('info')
+      this.$callApi("GET",'question/' + info.uid +'/getFollowQuestion').then(res=>{
+        this.cards = res;
+      }).catch(e=>{
+        console.log(e)
+      })
+  },
   methods: {}
 };
 </script>

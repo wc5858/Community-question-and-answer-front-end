@@ -4,6 +4,7 @@ Component({
     externalClasses: ['i-class'],
 
     properties: {
+        autoheight: { type: Boolean, value: true },
         title: {
             type: String
         },

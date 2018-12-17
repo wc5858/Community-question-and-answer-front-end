@@ -7,7 +7,11 @@
     "pages/foq/main",
     "pages/myq/main",
     "pages/mya/main",
-    "pages/newq/main"
+    "pages/newq/main",
+    "pages/newa/main",
+    "pages/newc/main",
+    "pages/ans/main",
+    "pages/que/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

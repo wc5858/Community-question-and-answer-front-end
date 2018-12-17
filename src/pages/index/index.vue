@@ -1,15 +1,15 @@
 <template>
   <div class="page">
     <ul>
-      <li class="list" v-for="(item, itemIndex) in cards" v-bind:key="itemIndex">
+      <li class="list" v-for="(item, itemIndex) in cards" v-bind:key="itemIndex" @click="goAnswer(itemIndex)">
         {{item.value}}
         <i-card
           full="true"
-          v-bind:title="item.name"
-          v-bind:thumb="item.avatar"
+          v-bind:title="item.user.name"
+          v-bind:thumb="item.user.pictureurl"
         >
-          <view slot="content">{{item.ups + '赞回答：' +item.question}}</view>
-          <view slot="footer">{{item.answer}}</view>
+          <view slot="content">{{'回答了：' +item.question.title}}</view>
+          <view slot="footer">{{item.content}}</view>
         </i-card>
       </li>
     </ul>
@@ -23,49 +23,26 @@
 export default {
   data() {
     return {
-      cards: [{
-        name: "混子队长",
-        avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
-        question: "计网作业不想做了怎么办",
-        answer: "让组员去做",
-        ups: 100
-      },{
-        name: "混子队长",
-        avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
-        question: "计网作业不想做了怎么办",
-        answer: "让组员去做",
-        ups: 100
-      },{
-        name: "混子队友",
-        avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
-        question: "计网作业不想做了怎么办",
-        answer: "让组长去做",
-        ups: 100
-      },{
-        name: "混子队长",
-        avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
-        question: "计网作业组员和组长都不想做了怎么办",
-        answer: "让田神去做",
-        ups: 100
-      }]
+      cards: []
     };
   },
 
   methods: {
+    goAnswer(i){
+      wx.navigateTo({
+        url: '/pages/ans/main?aid=' + this.cards[i].aid
+      })
+    },
     newQuestion() {
       wx.navigateTo({
         url: '/pages/newq/main'
       })
     },
-    bindViewTap() {
-      const url = "../logs/main";
-      wx.navigateTo({ url });
-    },
     login() {
       wx.getStorage({
-        key: "openid",
+        key: "info",
         success:res=> {
-          console.log(res.data);
+          console.log(res.data)
         },
         fail:()=> {
           // 调用登录接口
@@ -78,29 +55,34 @@ export default {
                   })
                   .then(res => {
                     wx.setStorage({
-                      key: 'openid',
-                      data: res.openid
+                      key: 'info',
+                      data: {
+                        openid: res.openid,
+                        uid: res.uid
+                      }
                     })
                   })
                   .catch(res => {
                     console.log(res);
                   });
               } else {
-                console.log("登录失败！" + res.errMsg);
+                console.log("登录失败！" + res.errMsg)
               }
             }
           });
         }
       });
-    },
-    clickHandle(msg, ev) {
-      console.log("clickHandle:", msg, ev);
     }
   },
-
   created() {
     this.login();
   },
+  onShow() {
+    let uid = wx.getStorageSync('info').uid
+    this.$callApi("GET",'answer/' + uid +'/getFollowUserAnswer').then(res=>{
+        this.cards=res
+      })
+  }
 };
 </script>
 

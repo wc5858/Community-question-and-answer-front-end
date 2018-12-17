@@ -6,11 +6,14 @@
         <i-card
           full="true"
           v-bind:title="item.name"
-          v-bind:thumb="item.avatar"
-          extra="点击取消关注"
+          v-bind:thumb="item.pictureurl"
         >
-          <view slot="content">{{item.ups + '赞回答：' +item.question}}</view>
-          <view slot="footer">{{item.answer}}</view>
+          <i-switch  v-bind:value="item.on" size="large" @change="onChange(itemIndex)" slot="content">
+              <view slot="open">关注</view>
+              <view slot="close">已取消</view>
+          </i-switch>
+          <!-- <view slot="content">{{item.ups + '赞回答：' +item.question}}</view>
+          <view slot="footer">{{item.answer}}</view> -->
         </i-card>
       </li>
     </ul>
@@ -21,29 +24,30 @@
 export default {
   data() {
     return {
-      cards: [{
-        name: "混子队长",
-        avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
-        question: "计网作业不想做了怎么办",
-        answer: "让组员去做",
-        ups: 100
-      },{
-        name: "混子队友",
-        avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
-        question: "计网作业不想做了怎么办",
-        answer: "让组长去做",
-        ups: 100
-      },{
-        name: "混子队长",
-        avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
-        question: "计网作业组员和组长都不想做了怎么办",
-        answer: "让田神去做",
-        ups: 100
-      }]
+      cards: []
     };
   },
-  created() {},
+  onShow() {
+    let info = wx.getStorageSync('info')
+      this.$callApi("GET",'user/' + info.uid +'/getFollowUserList').then(res=>{
+        res.forEach(element => {
+          element.on = true;
+        });
+        this.cards = res;
+      }).catch(e=>{
+        console.log(e)
+      })
+  },
   methods: {
+    onChange(i) {
+      let target = this.cards[i]
+      target.on = !target.on
+      this.$callApi("GET",'user/' + wx.getStorageSync('info').uid + '/' + target.uid +(target.on ? '/addFollowUser' : '/removeFollowUser')).then(res=>{
+        console.log('操作成功')
+      }).catch(e=>{
+        console.log(e)  
+      })
+    }
   }
 };
 </script>

@@ -42,6 +42,7 @@ export default {
         success: res => {
           this.name = res.userInfo.nickName;
           this.avatar = res.userInfo.avatarUrl;
+          this.updateUserinfo()
         },
         fail: () => {
           this.show = true;
@@ -52,9 +53,20 @@ export default {
       this.name = e.target.userInfo.nickName;
       this.avatar = e.target.userInfo.avatarUrl;
       this.show = false;
+      this.updateUserinfo()
+    },
+    updateUserinfo(){
+      let info = wx.getStorageSync('info')
+      this.$callApi("POST",'user/' + info.uid +'/addUserInfo',
+        {
+          name:this.name,
+          pictureurl: this.avatar
+        }
+      )
     }
+
   },
-  created() {
+  onShow() {
     this.getUserInfo();
   }
 };

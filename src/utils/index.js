@@ -19,7 +19,7 @@ export function formatTime (date) {
 }
 
 const protocol = 'http'
-const callTarget = '192.168.1.106:9090'
+const callTarget = '101.132.104.236:9090'
 
 function callApi (method='GET',url,data) {
   wx.showLoading({
@@ -33,7 +33,7 @@ function callApi (method='GET',url,data) {
       header: {
         // 'X-Bmob-Application-Id': bmobConfig.applicationId,
         // 'X-Bmob-REST-API-Key': bmobConfig.restApiKey,
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       }, // 设置请求的 header
       success: function (res) {
         wx.hideLoading();

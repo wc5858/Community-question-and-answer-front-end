@@ -5,11 +5,12 @@
         {{item.value}}
         <i-card
           full="true"
-          v-bind:title="item.name"
-          v-bind:thumb="item.avatar"
+          v-bind:title="item.user.name"
+          v-bind:thumb="item.user.pictureurl"
           extra="回复了你"
+          @click="goAnswer(itemIndex)"
         >
-          <view slot="content">{{item.res}}</view>
+          <view slot="content">{{item.content}}</view>
           <!-- <view slot="footer">{{item.answer}}</view> -->
         </i-card>
       </li>
@@ -21,23 +22,21 @@
 export default {
   data() {
     return {
-      cards: [{
-        name: "混子队长",
-        avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
-        res: "神回复",
-      },{
-        name: "混子队友",
-        avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
-        res: "神回复",
-      },{
-        name: "混子队长",
-        avatar: "https://i.loli.net/2017/08/21/599a521472424.jpg",
-        res: "神回复",
-      }]
+      cards: []
     };
   },
-  created() {},
+  onShow() {
+    let uid = wx.getStorageSync('info').uid
+    this.$callApi("GET",'comment/' + uid +'/getReceivedComment').then(res=>{
+        this.cards=res
+      })
+  },
   methods: {
+    goAnswer(i){
+      wx.navigateTo({
+        url: '/pages/ans/main?aid=' + this.cards[i].aid
+      })
+    }
   }
 };
 </script>
