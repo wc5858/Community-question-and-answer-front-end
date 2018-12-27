@@ -8,6 +8,7 @@
         </i-switch>
       </i-cell>
     </i-panel>
+    <view v-if="!on" style="text-align:center;color:#666;">该问题已关闭</view>
     <ul>
       <li class="list" v-for="(item, itemIndex) in cards" v-bind:key="itemIndex" @click="goAnswer(itemIndex)">
         <i-card
@@ -19,7 +20,7 @@
         </i-card>
       </li>
     </ul>
-    <div class="add" @click="newAnswer">
+    <div class="add" @click="newAnswer" v-if="on">
       <i-icon type="add" size="45" color="#fff" />
     </div>
   </div>
@@ -31,26 +32,30 @@ export default {
     return {
       qid: 0,
       state: 0,
-      que:{
+      que: {
         content: "",
         title: "2",
-        qid:0
+        qid: 0
       },
-      cards: []
+      cards: [],
+      on: true
     };
   },
   onLoad(options) {
     this.qid = options.qid;
+  },
+  onShow() {
     let uid = wx.getStorageSync('info').uid
-    this.$callApi("GET",'user/' +uid+'/'+ options.qid +'/checkFollowQuestion').then(res=>{
-        this.state=res.state != 0
-      })
-    this.$callApi("GET",'question/' + options.qid +'/getById').then(res=>{
-        this.que=res
-      })
-    this.$callApi("GET",'answer/' + options.qid +'/getByQuestionId').then(res=>{
-        this.cards = res;
-      })
+    this.$callApi("GET", 'user/' + uid + '/' + this.qid + '/checkFollowQuestion').then(res => {
+      this.state = res.state != 0
+    })
+    this.$callApi("GET", 'question/' + this.qid + '/getById').then(res => {
+      this.on = res.state == 0
+      this.que = res
+    })
+    this.$callApi("GET", 'answer/' + this.qid + '/getByQuestionId').then(res => {
+      this.cards = res;
+    })
   },
   methods: {
     goAnswer(i) {
@@ -58,12 +63,12 @@ export default {
         url: '/pages/ans/main?aid=' + this.cards[i].aid
       })
     },
-    onChange(){
-      this.$callApi("GET",'user/' + wx.getStorageSync('info').uid + '/' + this.qid +(this.state ? '/removeFollowQuestion' : '/addFollowQuestion')).then(res=>{
+    onChange() {
+      this.$callApi("GET", 'user/' + wx.getStorageSync('info').uid + '/' + this.qid + (this.state ? '/removeFollowQuestion' : '/addFollowQuestion')).then(res => {
         console.log('操作成功')
         this.state = !this.state
-      }).catch(e=>{
-        console.log(e)  
+      }).catch(e => {
+        console.log(e)
       })
     },
     // focusUser(){

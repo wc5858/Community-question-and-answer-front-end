@@ -1,5 +1,9 @@
 <template>
   <div class="page">
+    <i-panel title="匿名设置">
+        <i-checkbox value="匿名回答" v-bind:checked="checked" @change="handleAnimalChange">
+        </i-checkbox>
+    </i-panel>
     <i-panel title="回答内容">
       <i-input value="\n\n\n" type="textarea" @change="dscChange"/>
     </i-panel>
@@ -13,16 +17,20 @@ export default {
 
   data() {
     return {
-      qid:0,
+      qid: 0,
       dsc: "\n\n\n",
+      checked: false
     };
   },
   methods: {
-    dscChange(e){
+    handleAnimalChange() {
+      this.checked = !this.checked
+    },
+    dscChange(e) {
       this.dsc = e.target.detail.value
     },
     submit() {
-      if(this.dsc.trim()==""||this.dsc.replace(/^\n*/g,'').replace(/\n*$/g,'')=="") {
+      if (this.dsc.trim() == "" || this.dsc.replace(/^\n*/g, '').replace(/\n*$/g, '') == "") {
         wx.showToast({
           title: '请输入回答内容',
           icon: 'none',
@@ -30,11 +38,11 @@ export default {
         })
       }
       let info = wx.getStorageSync('info')
-      this.$callApi("POST",'answer/' + info.uid +'/' + this.qid +'/addAnswer',
+      this.$callApi("POST", 'answer/' + info.uid + '/' + this.qid + '/addAnswer',
         {
           content: this.dsc
         }
-      ).then(res=>{
+      ).then(res => {
         wx.navigateTo({
           url: '/pages/que/main?qid=' + this.qid
         })
@@ -52,5 +60,4 @@ export default {
   background: #f3f3f3;
   min-height: 100vh;
 }
-
 </style>
